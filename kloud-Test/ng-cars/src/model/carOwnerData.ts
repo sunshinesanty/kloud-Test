@@ -1,5 +1,5 @@
 import { ICarOwner } from '../model/interfaces';
-import config from '../common/config';
+import config from '../../common/config';
 import { CarData } from './carData';
 
 export class CarOwnerData implements ICarOwner {

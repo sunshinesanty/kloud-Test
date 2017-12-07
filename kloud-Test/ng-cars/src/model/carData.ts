@@ -1,5 +1,4 @@
 import { ICar } from '../model/interfaces';
-import config from '../common/config';
 
 export class CarData implements ICar {
     brand: string;

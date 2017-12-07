@@ -1,4 +1,4 @@
-import config from '../common/config';
+import * as config from '../../common/config';
 
 enum httpMethod {
     'GET',
@@ -31,7 +31,7 @@ export class CarsIO {
         headers.append('Accept', 'application/json');
         httpOptions = {
             headers: headers,
-            mode: (config.network.corsEnabled ? 'cors' : 'no-cors'),
+            mode: (config.default.network.corsEnabled ? 'cors' : 'no-cors'),
             cache: 'default',
             method: httpMethod[method]
         };
@@ -43,7 +43,10 @@ export class CarsIO {
     private async fetchIt(method: httpMethod, endPoint: string, body?: string) {
         try {
             const httpOptions = this.getHttpOption(method, body);
-            const responce = await fetch(`${config.network.baseEndPointUrl}${endPoint}`, httpOptions);
+            const enpointUrl = config.default.network.userProxy ?
+                `${config.default.network.proxy.baseEndPointUrl}${endPoint}?src=${config.default.network.baseEndPointUrl}` :
+                `${config.default.network.baseEndPointUrl}${endPoint}`;
+            const responce = await fetch(enpointUrl, httpOptions);
             if (!responce.ok) {
                 const err = await responce.json();
                 return new Promise<any>((resolve, reject) => reject(err));

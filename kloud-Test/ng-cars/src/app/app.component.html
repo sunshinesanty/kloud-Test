@@ -1,23 +1,18 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
+<div class="conatiner">
   <h1>
-    Welcome to {{ title }}!
+    {{ title }}
   </h1>
-</div>
-<ul>
-  <li *ngFor="let carOwner of carOwners">
-    <div style="clear:both">
-      <div style="float:left">{{carOwner.name}}</div>
-      <div style="float:left">
-        <ul>
-          <li *ngFor="let car of carOwner.cars">
-            <div style="clear:both">
-              <div style="float:left">{{car.brand}}</div>
-              <div style="float:left">{{car.colour}}</div>
-            </div>
-          </li>
-        </ul>
+  <app-cars-loader [componentLoading]="isLoading"></app-cars-loader>
+  <app-cars-error [message]="showError.message" [show]="showError.show" [onClose]="showError.onClose"></app-cars-error>
+  <div class="panel-group" style="width:25%">
+    <div *ngFor="let brand of carBrands" class="panel panel-default">
+      <div class="panel-heading">
+        <h4 class="panel-title">{{brand}}</h4>
+      </div>
+      <div>
+        <app-cars-ownercolor [brandName]="brand"></app-cars-ownercolor>
       </div>
     </div>
-  </li>
-</ul>
+  </div>
+</div>
