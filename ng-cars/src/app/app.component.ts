@@ -12,8 +12,7 @@ import { fail } from 'assert';
 })
 
 export class AppComponent implements OnInit {
-  title = 'Car & Owners';
-  carBrands: string[] = [];
+  title = 'Cars & Owners';
   isLoading: Boolean = true;
   showError: IError;
   constructor(private _carService: CarOwnersService) { }
@@ -24,22 +23,15 @@ export class AppComponent implements OnInit {
       show: false,
       onClose: this.hideError
     };
-    this.loadCars();
   }
 
-  loadCars = async () => {
-    this.isLoading = true;
-    try {
-      this.carBrands = await this._carService.getCarBrands();
-    } catch (error) {
-      this.showError.message = `Unable to read cars data. Please contact your Aadministrator`;
-      this.showError.show = true;
-    }
-    this.isLoading = false;
+  public setError = (error: { message: string, show: boolean }) => {
+    this.showError.message = error.message;
+    this.showError.show = error.show;
   }
 
-  public getOwnersForBrand = async (brandName: string) => {
-    return await this._carService.getOwnersByCarBrand(brandName);
+  public setLoading = (loadStatus: boolean) => {
+    this.isLoading = loadStatus;
   }
 
   public hideError = () => {

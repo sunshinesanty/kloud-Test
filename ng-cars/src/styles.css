@@ -2,3 +2,6 @@
 @import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 @import "assets/css/riliwan-rabo.css";
 @import "assets/css/loading-bars.css";
+.panel-body{
+    padding: 8px;
+}

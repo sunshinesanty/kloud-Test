@@ -1,3 +1,4 @@
+// application configuration
 const config = {
     network: {
         baseEndPointUrl: 'https://kloudcodingtest.azurewebsites.net',

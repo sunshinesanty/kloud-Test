@@ -10,6 +10,19 @@ const consoleConfig = [
   })
 ];
 
+const fileConfig = [
+  new winston.transports.File({
+    name: 'info-file',
+    filename: 'filelog-info.log',
+    level: 'info'
+  }),
+  new winston.transports.File({
+    name: 'error-file',
+    filename: 'filelog-error.log',
+    level: 'error'
+  })
+];
+
 const createLogger = new winston.Logger({
   'transports': consoleConfig
 });

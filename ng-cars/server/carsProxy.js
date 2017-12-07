@@ -4,58 +4,79 @@
 */
 
 // node imports
-var httpRequest = require("request");
-var express = require('express');
-var urlHelper = require('url');
-var cors = require('cors');
+const httpRequest = require('request');
+const express = require('express');
+const urlHelper = require('url');
+const cors = require('cors');
+const fs = require('fs');
 
-//application configuration
+// application configuration
 const config = require('../common/config').default;
 
-// Logger classes
+// Logger classes that currently log to the console
+// but can be configured to log to a file
 const errorLog = require('./logger').errorlog;
 const successlog = require('./logger').successlog;
 
 // starts the light weight proxy server for the application
 function startServer() {
-    var proxyApp = express();
-    var webServer = require('http').createServer(proxyApp);
-    var port = process.env.port || 3088;
+    const proxyApp = express();
+    const webServer = require('http').createServer(proxyApp);
+    const port = process.env.port || 3088;
 
-    //set up routes    
-    proxyApp.use(cors());
-    proxyApp.get("/api/cars", getCarOwners);
+    // set up routes and enable CORS
+    proxyApp.use(cors())
+    proxyApp.get('/api/cars', getCarOwners);    
+    const path  = __dirname + '/../dist';
+    if (fs.existsSync(path)) {
+        const staticContent = express.static(path);
+        proxyApp.use(staticContent);
+    } else {
+        proxyApp.get('/', (req, res, next) => {
+            res.send('<h1>Applicaton not built and published</h1>')
+            next();
+        });
+    }
 
-
+    // local server for Dev acting as Proxy for original service
     webServer.listen(port, () => {
-        successlog.info('CORS enabled proxy API server launched..')
+        successlog.info('CORS enabled proxy API server launched..');
     });
 }
 
-function getCarOwners(req, res, next) {
+// Get car owners function atht repsonds to the API/CARS endpoint
+const getCarOwners = (req, res, next) => {
     try {
-        const queryData = urlHelper.parse(req.url, true);        
-        let serviceUrl = queryData && queryData.src ? queryData.src : `${config.network.baseEndPointUrl}${config.apiEndpoints.cars}`;
-        
+        // read any url sent via queryu string for data
+        const queryData = urlHelper.parse(req.url, true);
+
+        // if the URL is not sent via QUerystrig, then read from configuration file.
+        const serviceUrl = queryData && queryData.src ? queryData.src : `${config.network.baseEndPointUrl}${config.apiEndpoints.cars}`;
+
+        // set an HTTP request to the open URL,
+        // this is only suported for the URL taht are readly accessible public without authetication
         httpRequest({
             url: serviceUrl,
             json: true
         }, (error, response, body) => {
             if (!error && response.statusCode === 200) {
+                // respond with retrieved data on success
                 successlog.info('Success Car Owners retrieved.');
                 res.end(JSON.stringify(body));
                 next();
             } else {
+                // respond with not found status for the data could not retrieved
                 errorLog.error('Unable to read car owners.', error.Message, error.stack);
                 res.status(404).send(error.Message);
                 next();
             }
-        })
+        });
     } catch (error) {
-        errorLog.error('unexpected error', error.Message, error.stack);
+        // any other error is constructing teh web request is logged and sent as server error
+        errorLog.error('Unexpected server error', error.Message, error.stack);
         res.status(501).send('unexpected server error' + error.Message);
         next();
     }
-}
+};
 
 startServer();

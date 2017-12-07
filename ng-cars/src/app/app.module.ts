@@ -3,9 +3,10 @@ import { NgModule } from '@angular/core';
 
 
 import { AppComponent } from './app.component';
-import { ErrorComponent } from './directives/errors.component';
-import { LoadingComponent } from './directives/loading.component';
-import { OwnerColorComponent } from './components/owner.component';
+import {
+  ErrorComponent, LoadingComponent,
+  OwnerColorComponent, BrandComponent
+} from './components';
 import { CarOwnersService } from '../services/cars.service';
 
 
@@ -14,12 +15,13 @@ import { CarOwnersService } from '../services/cars.service';
     AppComponent,
     ErrorComponent,
     LoadingComponent,
-    OwnerColorComponent
+    OwnerColorComponent,
+    BrandComponent
   ],
   imports: [
     BrowserModule
   ],
-  providers: [{provide: CarOwnersService, useClass: CarOwnersService}],
+  providers: [{ provide: CarOwnersService, useClass: CarOwnersService }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

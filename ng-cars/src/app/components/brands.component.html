@@ -1,0 +1,10 @@
+<div class="panel-group" >
+    <div *ngFor="let brand of carBrands" class="panel panel-primary">
+        <div class="panel-heading">
+            <h4 class="panel-title">{{brand}}</h4>
+        </div>
+        <div>
+            <app-cars-ownercolor [brandName]="brand"></app-cars-ownercolor>
+        </div>
+    </div>
+</div>

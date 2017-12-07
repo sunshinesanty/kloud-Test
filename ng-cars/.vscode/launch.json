@@ -9,7 +9,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch Cars Proxy server",
-            "program": "${workspaceFolder}/server\\carsProxy.js"
+            "program": "${workspaceFolder}/server/carsProxy.js"
         }
     ]
 }
