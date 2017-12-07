@@ -1,0 +1,6 @@
+<div>
+    <app-cars-error [message]="showError.message" [show]="showError.show" [onClose]="showError.onClose"></app-cars-error>
+    <div class="panel-collapse" *ngFor="let owner of owners">
+        <div class="panel-body">{{owner.name}}</div>
+    </div>
+</div>
