@@ -28,6 +28,7 @@ function startServer() {
     proxyApp.use(cors())
     proxyApp.get('/api/cars', getCarOwners);    
     const path  = __dirname + '/../dist';
+    console.log('Hosting server at http://localhost:' + port)
     if (fs.existsSync(path)) {
         const staticContent = express.static(path);
         proxyApp.use(staticContent);

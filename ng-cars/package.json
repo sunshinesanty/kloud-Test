@@ -5,7 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "concurrently \"./node_modules/.bin/nodemon ./server/carsProxy.js\" \"ng serve\"",
-    "build": "ng build & node ./server/carsProxy.js",
+    "build": "ng build && node ./server/carsProxy.js",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
