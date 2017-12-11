@@ -1,15 +1,16 @@
 
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace react_dotnet_cars
 {
     public class Cars : ICars
     {
-        [BsonElement("brand")]
+        [JsonProperty(PropertyName="brand")]        
         public string Brand { get; set; }
 
-        [BsonElement("colour")]
+        [JsonProperty(PropertyName="colour")]        
         public string Colour { get; set; }
     }
 }
