@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Configuration;
 
 namespace react_dotnet_cars
 {
     [Route("api/cars")]
+    [EnableCors("openCors")]
     public class CarOwnersController : Controller
     {
         #region  Members

@@ -2,9 +2,8 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 
-import { IOwnerColor, IError } from '../model/interfaces';
+import { IOwnerColor } from '../model/interfaces';
 import CarOwnersService from '../store/cars.store';
-import { ErrorComponent } from './errors.component';
 
 export interface OwnerProps {
     brandName: string;
@@ -13,16 +12,9 @@ export interface OwnerProps {
 @observer
 export class OwnerColorComponent extends React.Component<OwnerProps, {}> {
     @observable owners: IOwnerColor[] = [];
-    @observable showError: IError;
     @observable isLoading: Boolean = true;
-    constructor(props: OwnerProps) { super(props); }
-
-    componentWillMount() {
-        this.showError = {
-            show: false,
-            message: '',
-            onClose: this.hideError
-        };
+    constructor(props: OwnerProps) {
+        super(props);
         this.loadOwners();
     }
 
@@ -38,19 +30,9 @@ export class OwnerColorComponent extends React.Component<OwnerProps, {}> {
         });
         return (
             <div>
-                <ErrorComponent
-                    message={this.showError.message}
-                    show={this.showError.show}
-                    onClose={this.showError.onClose}
-                />
                 {ownerNames}
             </div>
         );
-    }
-
-    public hideError = () => {
-        this.showError.message = '';
-        this.showError.show = false;
     }
 
     loadOwners = async () => {
@@ -59,8 +41,8 @@ export class OwnerColorComponent extends React.Component<OwnerProps, {}> {
             this.owners = await CarOwnersService.getOwnersByCarBrand(this.props.brandName);
             this.owners = this.owners.filter((ownerColor) => ownerColor.name);
         } catch (error) {
-            this.showError.message = 'Unable to get owner details. Please contact your administrator';
-            this.showError.show = true;
+            // tslint:disable-next-line:no-console
+            console.log(error);
         }
         this.isLoading = false;
     }
