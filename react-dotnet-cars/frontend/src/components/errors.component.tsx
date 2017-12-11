@@ -13,7 +13,7 @@ export class ErrorComponent extends React.Component<IError, {}> {
     render() {
         return (
             <div className="container">
-                <div className="alert alert-danger" hidden={this.props.show}>
+                <div className="alert alert-danger" hidden={!this.props.show}>
                     <button type="button" className="close" onClick={this.props.onClose}>&times;</button>
                     <strong>Error:</strong> {this.props.message}
                 </div>

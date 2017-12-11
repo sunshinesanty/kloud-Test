@@ -27,17 +27,14 @@ export class BrandComponent extends React.Component<BrandProps, {}> {
                     <div className="panel-heading">
                         <h4 className="panel-title">{car}</h4>
                     </div>
-                    <OwnerColorComponent brandName="car" />
+                    <OwnerColorComponent brandName={car} />
                 </div>
             );
         });
-        if (carBrands.length <= 0) {
-            return <div>Loading...</div>;
-        }
 
         return (
             <div className="panel-group">
-                {{ carBrands }}
+                {carBrands}
             </div>
         );
     }

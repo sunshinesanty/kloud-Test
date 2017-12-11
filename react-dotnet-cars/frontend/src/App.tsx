@@ -11,7 +11,7 @@ import { IError } from './model/interfaces';
 
 @observer
 class App extends React.Component<{}, {}> {
-  @observable title: string = 'Cars & OWners';
+  @observable title: string = 'Cars & Owners';
   @observable isLoading: boolean = true;
   @observable showError: IError;
   constructor(props: any) {

@@ -12,7 +12,6 @@ export interface OwnerProps {
 @observer
 export class OwnerColorComponent extends React.Component<OwnerProps, {}> {
     @observable owners: IOwnerColor[] = [];
-    @observable isLoading: Boolean = true;
     constructor(props: OwnerProps) {
         super(props);
         this.loadOwners();
@@ -36,7 +35,6 @@ export class OwnerColorComponent extends React.Component<OwnerProps, {}> {
     }
 
     loadOwners = async () => {
-        this.isLoading = true;
         try {
             this.owners = await CarOwnersService.getOwnersByCarBrand(this.props.brandName);
             this.owners = this.owners.filter((ownerColor) => ownerColor.name);
@@ -44,6 +42,5 @@ export class OwnerColorComponent extends React.Component<OwnerProps, {}> {
             // tslint:disable-next-line:no-console
             console.log(error);
         }
-        this.isLoading = false;
     }
 }
