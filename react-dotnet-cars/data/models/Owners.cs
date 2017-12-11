@@ -1,17 +1,21 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using Newtonsoft.Json;
 
 namespace react_dotnet_cars
 {
     public class CarOwners : ICarOwners
     {
-        public ObjectId Id { get; set; }
+        [Key]
+        [JsonProperty(PropertyName="id")]
+        public string Id { get; set; }
 
-        [BsonElement("name")]
+        [JsonProperty(PropertyName="name")]
         public string Name { get; set; }
 
-        [BsonElement("cars")]
-        public List<ICars> Cars { get; set; }
+        [JsonProperty(PropertyName="cars")]        
+        public List<Cars> Cars { get; set; }
     }
 }
