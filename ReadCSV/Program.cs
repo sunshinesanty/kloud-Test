@@ -1,8 +1,9 @@
 ﻿using System;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.Serialization.Json;
+using Amazon.S3;
 
-namespace HelloWorldLambda
+namespace ReadCSV
 {
     public class Handler
     {
