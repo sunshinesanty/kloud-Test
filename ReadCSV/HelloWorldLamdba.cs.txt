@@ -1,0 +1,124 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
+using Amazon.S3;
+using Amazon.S3.Model;
+
+namespace Sample
+{
+    public class ReadCSV
+    {
+        public static void Handler()
+        {
+            Task.Run(async () =>
+            {
+                using (var stream = new FileStream($"{Directory.GetCurrentDirectory()}\\testData.json", FileMode.Open))
+                {
+                    await new ReadCSV().Main();
+                }
+            }).GetAwaiter().GetResult();
+        }
+
+        public Task Main()
+        {
+            try
+            {
+                var file = "file.csv";
+                using (var streamReader = System.IO.File.OpenText(file))
+                {
+                    List<string> Headers = new List<string>();
+                    int lineIndx = 0;
+                    while (!streamReader.EndOfStream)
+                    {
+                        try
+                        {
+                            var line = streamReader.ReadLine();
+                            // this program epxects the first line to be header
+                            if (lineIndx == 0)
+                            {
+                                Headers = this.ExtractHeader(line);
+                            }
+                            
+                            var data = line.Split(new[] { ',', ';' });
+                            if (data != null)
+                            {
+                                for(int colIdx = 0; colIdx< Headers.Count; colIdx++){
+                                var person = new Person() { Name = data[colIdx], Phone = data[colIdx] };
+                                Console.WriteLine(person);
+                                // send sms code;
+                                }
+                            }
+                            else
+                            {
+                                throw new ArgumentException($@"The data provided on line {lineIndx} is incorrect. 
+                                Please it  must be in the format of <name>;<phoneno>; {Environment.NewLine} 
+                                The first line of the file will be omiited as it expects it to be the header");
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            LogError(ex, $"Error occured processing the request for line {lineIndx}.");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, $"Error occured Read the CSV file.");
+            }
+        }
+
+        private List<string> ExtractHeader(string HeaderLine)
+        {
+            List<string> headers = new List<string>();
+            if (HeaderLine != null && HeaderLine.Split(new[] { ',', ';' }).Length > 0)
+            {
+                headers.AddRange(HeaderLine.Split(new[] { ',', ';' }));
+            }
+            return headers;
+        }
+
+        private async Task<string> ReadFromS3()
+        {
+            var s3 = new AmazonS3Client(Amazon.RegionEndpoint.USWest2); //define your own region here
+
+            var putRequest = new PutObjectRequest();
+
+            var key = Guid.NewGuid().ToString().Replace("-", string.Empty);
+            putRequest.BucketName = GetBucketName();
+            putRequest.Key = key;
+            putRequest.InputStream = ConvertToStream(value);
+            putRequest.ContentType = "application/json";
+
+            var response = await s3.PutObjectAsync(putRequest);
+
+            var urlRequest = new GetPreSignedUrlRequest();
+            urlRequest.BucketName = GetBucketName();
+            urlRequest.Expires = DateTime.UtcNow.AddYears(2);
+            urlRequest.Key = key;
+
+            return s3.GetPreSignedURL(urlRequest);
+        }
+
+        private static void LogError(Exception ex, string customMessage = "")
+        {
+            string CorrelationId = $"Error {Guid.NewGuid().ToString("N")} -";
+            if (customMessage != string.Empty)
+                Console.WriteLine($"{CorrelationId} {customMessage}");
+            Console.WriteLine($"{CorrelationId} Message: {ex.Message}");
+            Console.WriteLine($"{CorrelationId} Stack Trace: {ex.StackTrace}");
+        }
+    }
+
+    public class Person
+    {
+        public string Name { get; set; }
+        public string Phone { get; set; }
+
+        public override string ToString()
+        {
+            return $"{this.Name} has the phone number {this.Phone}";
+        }
+    }
+}

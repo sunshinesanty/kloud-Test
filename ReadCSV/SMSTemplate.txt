@@ -1,0 +1,5 @@
+Hello {Name},
+
+Welcome to the SMS Testing
+
+
