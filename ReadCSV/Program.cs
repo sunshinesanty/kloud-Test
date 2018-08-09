@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Amazon.Lambda.Core;
 using Amazon.Lambda;
 using Amazon.Lambda.S3Events;
-// using Amazon.Lambda.Serialization.Json;
+using Amazon.Lambda.Serialization.Json;
 using Amazon.S3;
 using Amazon.S3.Model;
 using Amazon.SimpleNotificationService;
@@ -24,8 +24,10 @@ namespace ReadCSV
             _s3Client = new AmazonS3Client();
         }
 
+        [LambdaSerializer(typeof(JsonSerializer))]
         public async Task Handle(S3Event s3Event, ILambdaContext context)
         {
+            try{
             foreach (var record in s3Event.Records)
             {
                 if (!_supportedInputTypes.Contains(Path.GetExtension(record.S3.Object.Key).ToLower()))
@@ -38,17 +40,23 @@ namespace ReadCSV
                 Console.WriteLine($"Determining whether Input file {record.S3.Bucket.Name}:{record.S3.Object.Key} has required fields");
 
                 // Get the existing tag set
-                var taggingResponse = await _s3Client.GetObjectTaggingAsync(new GetObjectTaggingRequest
+                var taggingResponse = _s3Client.GetObjectTaggingAsync(new GetObjectTaggingRequest
                 {
                     BucketName = record.S3.Bucket.Name,
                     Key = record.S3.Object.Key
-                });
-
+                }).GetAwaiter().GetResult();
+                
+                Console.WriteLine($"File {record.S3.Bucket.Name}:{record.S3.Object.Key} tagging has been read.");
+                
                 if (taggingResponse.Tagging.Any(tag => tag.Key == "Processed" && tag.Value == "true"))
                 {
                     Console.WriteLine(
                         $"Input file {record.S3.Bucket.Name}:{record.S3.Object.Key} has already been processed");
                     continue;
+                }
+                else
+                {
+                    Console.WriteLine($"File {record.S3.Bucket.Name}:{record.S3.Object.Key} is being processed");
                 }
 
                 // Get the existing image
@@ -80,12 +88,12 @@ namespace ReadCSV
                                         var person = new Person() { Name = data[colIdx], Phone = data[colIdx] };
                                         Console.WriteLine($"Sending SMS to {person}");
                                         string template = System.Environment.GetEnvironmentVariable("SMS_TEMPLATE");
-                                        SendMessageToMobileAsync(
+                                        await SendMessageToMobileAsync(
                                             person.Phone,
                                             string.IsNullOrWhiteSpace(template) ?
                                                 $"Hello {person.Name}" :
                                                 string.Format(template, person.Name)
-                                        ).Wait();
+                                        );
                                     }
                                 }
                                 else
@@ -121,6 +129,10 @@ namespace ReadCSV
                     });
 
                 }
+            }
+            }
+            catch(Exception ex) {
+                LogError(ex, "Error reading file:");
             }
         }
 
