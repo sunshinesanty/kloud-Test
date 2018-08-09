@@ -1,0 +1,10 @@
+/media/santy/MyWork/SampleCode/myGitHub/ReadCSV/bin/Debug/netcoreapp2.0/ReadCSV.deps.json
+/media/santy/MyWork/SampleCode/myGitHub/ReadCSV/bin/Debug/netcoreapp2.0/ReadCSV.runtimeconfig.json
+/media/santy/MyWork/SampleCode/myGitHub/ReadCSV/bin/Debug/netcoreapp2.0/ReadCSV.runtimeconfig.dev.json
+/media/santy/MyWork/SampleCode/myGitHub/ReadCSV/bin/Debug/netcoreapp2.0/ReadCSV.dll
+/media/santy/MyWork/SampleCode/myGitHub/ReadCSV/bin/Debug/netcoreapp2.0/ReadCSV.pdb
+/media/santy/MyWork/SampleCode/myGitHub/ReadCSV/obj/Debug/netcoreapp2.0/ReadCSV.csproj.CoreCompileInputs.cache
+/media/santy/MyWork/SampleCode/myGitHub/ReadCSV/obj/Debug/netcoreapp2.0/ReadCSV.AssemblyInfoInputs.cache
+/media/santy/MyWork/SampleCode/myGitHub/ReadCSV/obj/Debug/netcoreapp2.0/ReadCSV.AssemblyInfo.cs
+/media/santy/MyWork/SampleCode/myGitHub/ReadCSV/obj/Debug/netcoreapp2.0/ReadCSV.dll
+/media/santy/MyWork/SampleCode/myGitHub/ReadCSV/obj/Debug/netcoreapp2.0/ReadCSV.pdb
